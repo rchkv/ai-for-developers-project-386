@@ -5,12 +5,13 @@ Hexlet "AI for Developers" training project. The app is a calendar booking syste
 ## Commands
 
 - Compile TypeSpec: `npx tsp compile .` — emits OpenAPI 3.1 to `tsp-output/schema/openapi.yaml` (configured in `tspconfig.yaml`; output is gitignored). There is **no npm script** for this.
-- `npm start` — Vite dev server on port 3000; no frontend source files exist yet, so it only serves an empty page.
+- `npm start` — Vite dev server on port 3000; no frontend source files exist yet, so it only serves an empty page.o
 
 ## Architecture state
 
-- `main.tsp` still contains the untouched "Widget Service" boilerplate, **not** the calendar API described in `requirements.md`. The real API (event types, bookable slots, bookings) has not been implemented yet.
+- `main.tsp` implements the calendar API from `requirements.md`: `Owner`, `Event` (event type, incl. `duration` in minutes), `Slot` models, plus `Owners`/`Events`/`Slots` interfaces. Booking is not a separate entity — a guest books by calling `POST /slots/{id}/book`, which flips `Slot.is_available` to `false`.
 - Package manager is pinned to npm@12 (corepack). Deps are TypeSpec v1.14.0 (`@typespec/http`, `@typespec/openapi`, `@typespec/openapi3`, `@typespec/rest`).
+
 
 ## Constraints (from requirements.md)
 

@@ -6,9 +6,6 @@ tsp-output/
 dist/
 openapi.yaml
 
-# Generated mock data for Prism
-mock/
-
 # Dependency directories
 node_modules/
 ui/node_modules/

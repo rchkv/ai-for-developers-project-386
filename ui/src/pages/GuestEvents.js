@@ -1,5 +1,4 @@
 import { listEvents } from "../api/client.js";
-import { applyToEvents } from "../state/overrides.js";
 import { EVENT_TYPE_LABELS, showAlert } from "../components/alert.js";
 
 export async function renderGuestEvents(container) {
@@ -9,7 +8,7 @@ export async function renderGuestEvents(container) {
   let events;
   try {
     const data = await listEvents();
-    events = applyToEvents(data.items);
+    events = data.items;
   } catch (error) {
     content.innerHTML = "";
     showAlert(container, { variant: "danger", message: error.message });

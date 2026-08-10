@@ -1,5 +1,4 @@
 import { listEvents, createEvent, updateEvent, deleteEvent } from "../api/client.js";
-import { applyToEvents, addLocalEvent, patchLocalEvent, markEventDeleted } from "../state/overrides.js";
 import { EVENT_TYPE_LABELS, showAlert } from "../components/alert.js";
 
 const EVENT_TYPES = Object.keys(EVENT_TYPE_LABELS);
@@ -21,7 +20,7 @@ export async function renderAdminEvents(container) {
   async function reload() {
     try {
       const data = await listEvents();
-      const events = applyToEvents(data.items);
+      const events = data.items;
       tableHost.innerHTML = renderTable(events);
       tableHost.querySelectorAll("[data-edit]").forEach((btn) =>
         btn.addEventListener("click", () => openDialog(events.find((e) => e.id === btn.dataset.edit))),
@@ -53,7 +52,6 @@ export async function renderAdminEvents(container) {
   async function onDelete(id) {
     try {
       await deleteEvent(id);
-      markEventDeleted(id);
       await reload();
     } catch (error) {
       showAlert(container, { variant: "danger", message: error.message });
@@ -76,10 +74,8 @@ export async function renderAdminEvents(container) {
     try {
       if (isEdit) {
         await updateEvent(payload.id, payload);
-        patchLocalEvent(payload.id, payload);
       } else {
         await createEvent(payload);
-        addLocalEvent(payload);
       }
       dialog.hide();
       showAlert(container, { variant: "success", message: "Сохранено." });

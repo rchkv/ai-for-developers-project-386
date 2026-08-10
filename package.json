@@ -16,6 +16,8 @@
   "scripts": {
     "compile": "tsp compile .",
     "mock:generate": "node scripts/generate-mock-openapi.mjs",
-    "mock": "npm run compile && npm run mock:generate && prism mock mock/openapi.generated.yaml -p 4010 --cors"
+    "mock": "npm run compile && npm run mock:generate && prism mock mock/openapi.generated.yaml -p 4010 --cors",
+    "backend:install": "npm --prefix backend install",
+    "backend": "npm --prefix backend start"
   }
 }

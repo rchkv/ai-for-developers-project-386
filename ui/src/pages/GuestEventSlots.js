@@ -1,5 +1,4 @@
 import { listEvents, listSlots, bookSlot, ApiError } from "../api/client.js";
-import { applyToEvents, applyToSlots, markSlotBooked } from "../state/overrides.js";
 import { EVENT_TYPE_LABELS, formatDay, formatTime, showAlert } from "../components/alert.js";
 
 export async function renderGuestEventSlots(container, { id }) {
@@ -13,10 +12,10 @@ export async function renderGuestEventSlots(container, { id }) {
   let slots;
   try {
     const eventsData = await listEvents();
-    event = applyToEvents(eventsData.items).find((e) => e.id === id);
+    event = eventsData.items.find((e) => e.id === id);
     if (!event) throw new Error("Тип встречи не найден.");
     const data = await listSlots({ eventId: id, available: true });
-    slots = applyToSlots(data.items).filter((slot) => slot.event_id === id && slot.is_available);
+    slots = data.items.filter((slot) => slot.event_id === id && slot.is_available);
   } catch (error) {
     content.innerHTML = "";
     showAlert(container, { variant: "danger", message: error.message });
@@ -89,7 +88,6 @@ export async function renderGuestEventSlots(container, { id }) {
     confirmOk.loading = true;
     try {
       await bookSlot(selectedSlot.id);
-      markSlotBooked(selectedSlot.id);
       dialog.hide();
       showAlert(container, { variant: "success", message: "Слот успешно забронирован." });
       await renderGuestEventSlots(container, { id });

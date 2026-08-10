@@ -1,5 +1,4 @@
 import { listEvents, listSlots, createSlot, deleteSlot } from "../api/client.js";
-import { applyToEvents, applyToSlots, addLocalSlot, markSlotDeleted } from "../state/overrides.js";
 import { EVENT_TYPE_LABELS, formatDateTime, showAlert } from "../components/alert.js";
 
 export async function renderAdminSlots(container) {
@@ -18,7 +17,7 @@ export async function renderAdminSlots(container) {
 
   async function loadEvents() {
     const data = await listEvents();
-    events = applyToEvents(data.items);
+    events = data.items;
     eventSelect.innerHTML = events
       .map((event) => `<sl-option value="${event.id}">${EVENT_TYPE_LABELS[event.type] || event.type} (${event.duration} мин)</sl-option>`)
       .join("");
@@ -27,7 +26,7 @@ export async function renderAdminSlots(container) {
   async function reloadSlots() {
     try {
       const data = await listSlots();
-      const slots = applyToSlots(data.items).sort((a, b) => new Date(a.from) - new Date(b.from));
+      const slots = data.items.sort((a, b) => new Date(a.from) - new Date(b.from));
       tableHost.innerHTML = renderTable(slots, events);
       tableHost.querySelectorAll("[data-delete]").forEach((btn) =>
         btn.addEventListener("click", () => onDelete(btn.dataset.delete)),
@@ -41,7 +40,6 @@ export async function renderAdminSlots(container) {
   async function onDelete(id) {
     try {
       await deleteSlot(id);
-      markSlotDeleted(id);
       await reloadSlots();
     } catch (error) {
       showAlert(container, { variant: "danger", message: error.message });
@@ -74,7 +72,6 @@ export async function renderAdminSlots(container) {
 
     try {
       await createSlot(payload);
-      addLocalSlot(payload);
       form.reset();
       showAlert(container, { variant: "success", message: "Слот создан." });
       await reloadSlots();

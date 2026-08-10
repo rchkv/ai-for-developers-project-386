@@ -1,5 +1,4 @@
 import { listEvents, listSlots } from "../api/client.js";
-import { applyToEvents, applyToSlots } from "../state/overrides.js";
 import { EVENT_TYPE_LABELS, formatDateTime, showAlert } from "../components/alert.js";
 
 export async function renderAdminBookings(container) {
@@ -11,9 +10,9 @@ export async function renderAdminBookings(container) {
 
   try {
     const [eventsData, slotsData] = await Promise.all([listEvents(), listSlots()]);
-    const events = applyToEvents(eventsData.items);
+    const events = eventsData.items;
     const eventById = new Map(events.map((e) => [e.id, e]));
-    const bookings = applyToSlots(slotsData.items)
+    const bookings = slotsData.items
       .filter((slot) => !slot.is_available)
       .sort((a, b) => new Date(a.from) - new Date(b.from));
 

@@ -1,4 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4010";
+// Если VITE_API_BASE_URL не задан при сборке (например, в production-образе, где
+// backend раздаёт собранный UI и API с одного и того же порта), используем
+// текущий origin страницы — это позволяет не зашивать конкретный порт в сборку.
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || window.location.origin;
 
 export class ApiError extends Error {
   constructor(code, message) {
@@ -17,7 +20,11 @@ async function request(path, { method = "GET", body, query } = {}) {
     }
   }
 
-  const headers = {};
+  // Явный Accept: application/json нужен, чтобы backend мог отличить
+  // fetch-запросы UI от навигации браузера, когда UI и API раздаются с
+  // одного origin (см. backend/src/server.js) — иначе, например,
+  // GET /events/:id было бы неоднозначно между API и SPA-страницей.
+  const headers = { Accept: "application/json" };
   if (body !== undefined) {
     headers["Content-Type"] = "application/json";
   }

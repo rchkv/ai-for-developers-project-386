@@ -1,7 +1,11 @@
-// Если VITE_API_BASE_URL не задан при сборке (например, в production-образе, где
-// backend раздаёт собранный UI и API с одного и того же порта), используем
-// текущий origin страницы — это позволяет не зашивать конкретный порт в сборку.
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+// Если VITE_API_BASE_URL не задан при сборке, выбираем адрес бэкенда:
+// - в dev-режиме UI и API живут на разных портах (3000 и 4010), поэтому
+//   обращаемся к бэкенду напрямую;
+// - в production-образе (Docker) backend раздаёт собранный UI и API с одного
+//   порта, поэтому используем текущий origin страницы.
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.DEV ? "http://localhost:4010" : window.location.origin);
 
 export class ApiError extends Error {
   constructor(code, message) {

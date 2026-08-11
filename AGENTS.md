@@ -18,12 +18,18 @@ Hexlet "AI for Developers" training project. The app is a calendar booking syste
   - `ui/src/router.js` — minimal path-based router; guest routes at `/` and `/events/:id`, owner routes under `/admin/*`.
   - `ui/scripts/copy-shoelace-assets.mjs` (postinstall) copies Shoelace's icon assets into `ui/public/shoelace` so they're served at a stable URL.
 
-
 ## Constraints (from requirements.md)
 
 - No auth/registration: one implicit calendar owner for the admin side; guests book slots anonymously.
 - A slot may not be double-booked, even across different event types — the API must enforce this.
 - Booking window is 14 days from today.
+
+## Testing instructions
+
+- Find the CI plan in the .github/workflows folder.
+- From the package root you can just call `npm run test:e2e`. The commit should pass all tests before you merge.
+- Fix any test or type errors until the whole suite is green.
+- Add or update tests for the code you change, even if nobody asked.
 
 ## CI
 

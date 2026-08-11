@@ -1,4 +1,11 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4010";
+// Если VITE_API_BASE_URL не задан при сборке, выбираем адрес бэкенда:
+// - в dev-режиме UI и API живут на разных портах (3000 и 4010), поэтому
+//   обращаемся к бэкенду напрямую;
+// - в production-образе (Docker) backend раздаёт собранный UI и API с одного
+//   порта, поэтому используем текущий origin страницы.
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.DEV ? "http://localhost:4010" : window.location.origin);
 
 export class ApiError extends Error {
   constructor(code, message) {
@@ -17,7 +24,11 @@ async function request(path, { method = "GET", body, query } = {}) {
     }
   }
 
-  const headers = {};
+  // Явный Accept: application/json нужен, чтобы backend мог отличить
+  // fetch-запросы UI от навигации браузера, когда UI и API раздаются с
+  // одного origin (см. backend/src/server.js) — иначе, например,
+  // GET /events/:id было бы неоднозначно между API и SPA-страницей.
+  const headers = { Accept: "application/json" };
   if (body !== undefined) {
     headers["Content-Type"] = "application/json";
   }

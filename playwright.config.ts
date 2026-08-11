@@ -25,7 +25,7 @@ export default defineConfig({
       timeout: 60_000,
     },
     {
-      command: "npm --prefix ui run dev -- --port 3000 --strictPort",
+      command: "VITE_API_BASE_URL=http://localhost:4010 npm --prefix ui run dev -- --port 3000 --strictPort",
       url: "http://localhost:3000",
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,

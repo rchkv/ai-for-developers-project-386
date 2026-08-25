@@ -31,7 +31,7 @@ export async function renderGuestEventSlots(container, { id }) {
     </div>`;
 
   if (slots.length === 0) {
-    content.innerHTML = `${title}<div class="empty-state">Нет свободных слотов на ближайшие 14 дней.</div>`;
+    content.innerHTML = `${title}<div class="empty-state">Нет свободных слотов на ближайшие 20 дней.</div>`;
     return;
   }
 

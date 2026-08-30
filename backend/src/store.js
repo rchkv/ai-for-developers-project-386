@@ -7,7 +7,7 @@
  */
 import { notFound, conflict } from "./lib/errors.js";
 
-export const BOOKING_WINDOW_DAYS = 14;
+export const BOOKING_WINDOW_DAYS = 20;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const owners = new Map();
